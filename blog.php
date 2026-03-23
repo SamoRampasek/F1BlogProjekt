@@ -1,7 +1,18 @@
 <?php
 require 'db.php';
 
-$stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC");
+$display_category = "";
+//filter na kategorie
+if (isset($_GET['category']) && !empty($_GET['category'])) {
+  $selected_category = $_GET['category'];
+  $display_category = htmlspecialchars($selected_category);
+
+  $stmt = $pdo->prepare("SELECT * FROM posts WHERE category = :category ORDER BY created_at DESC");
+  $stmt->execute(['category' => $selected_category]);
+} else {
+  $stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC");
+}
+
 $all_posts = $stmt->fetchAll();
 ?>
 
@@ -33,7 +44,6 @@ $all_posts = $stmt->fetchAll();
     </div>
   </div>
 
-  <!-- Header -->
   <header class="background-header">
     <nav class="navbar navbar-expand-lg">
       <div class="container">
@@ -76,6 +86,17 @@ $all_posts = $stmt->fetchAll();
         <div class="col-lg-8">
           <div class="all-blog-posts">
             <div class="row">
+              <?php if (!empty($display_category)): ?>
+                <div class="col-lg-12">
+                  <div style="margin-bottom: 40px; padding-bottom: 15px; border-bottom: 3px solid #ff0000;">
+                    <h2
+                      style="font-size: 32px; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; color: #ff0000; margin: 0;">
+                      Category - <?= $display_category ?>
+                    </h2>
+                  </div>
+                </div>
+              <?php endif; ?>
+
               <?php if (count($all_posts) > 0): ?>
                 <?php foreach ($all_posts as $post): ?>
                   <div class="col-lg-6">
@@ -91,26 +112,15 @@ $all_posts = $stmt->fetchAll();
                         <ul class="post-info">
                           <li><a href="#"><?= htmlspecialchars($post['author']) ?></a></li>
                           <li><a href="#"><?= date('M d, Y', strtotime($post['created_at'])) ?></a></li>
-                          <li><a href="#">0 Comments</a></li>
                         </ul>
                         <p><?= nl2br(htmlspecialchars(substr($post['content'], 0, 100))) ?>...</p>
-                        <div class="post-options">
-                          <div class="row">
-                            <div class="col-lg-12">
-                              <ul class="post-tags">
-                                <li><i class="fa fa-tags"></i></li>
-                                <li><a href="#"><?= htmlspecialchars($post['category']) ?></a></li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </div>
                 <?php endforeach; ?>
               <?php else: ?>
                 <div class="col-lg-12">
-                  <p>No posts found. <a href="add-post.php">Create the first one!</a></p>
+                  <p>No posts found in this category. <a href="blog.php">View all posts</a></p>
                 </div>
               <?php endif; ?>
 
