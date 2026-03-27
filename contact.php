@@ -1,14 +1,50 @@
+<?php
+require 'db.php';
+
+// session zaciatok
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_message'])) {
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $subject = trim($_POST['subject'] ?? '');
+    $message = trim($_POST['message'] ?? '');
+
+    if (!empty($name) && !empty($email) && !empty($subject) && !empty($message)) {
+        try {
+            $stmt = $pdo->prepare("INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$name, $email, $subject, $message]);
+            
+            // session variable
+            $_SESSION['success_message'] = "Thank you! Your message has been sent.";
+            
+            // redirect (fix na refresh bug)
+            header("Location: contact.php");
+            exit; 
+        } catch (PDOException $e) {
+            $_SESSION['error_message'] = "Oops! Something went wrong.";
+            header("Location: contact.php");
+            exit;
+        }
+    }
+}
+
+// reset aby nezostavali vysvietene spravy
+$success_message = $_SESSION['success_message'] ?? '';
+$error_message = $_SESSION['error_message'] ?? '';
+unset($_SESSION['success_message'], $_SESSION['error_message']);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap" rel="stylesheet">
-  <title>Stand Blog - Contact Page</title>
+  <title>F1 Blog - Contact Page</title>
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/fontawesome.css">
   <link rel="stylesheet" href="assets/css/templatemo-stand-blog.css">
@@ -24,7 +60,6 @@
     </div>
   </div>
 
-  <!-- Header -->
   <header class="background-header">
     <nav class="navbar navbar-expand-lg">
       <div class="container">
@@ -37,52 +72,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="index.php">Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="about.php">About Us</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="blog.php">Blog Entries</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="post-details.php">Post Details</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="contact.php">Contact Us</a>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
+            <li class="nav-item"><a class="nav-link" href="blog.php">Blog Entries</a></li>
+            <li class="nav-item"><a class="nav-link" href="post-details.php">Post Details</a></li>
+            <li class="nav-item active"><a class="nav-link" href="contact.php">Contact Us <span class="sr-only">(current)</span></a></li>
           </ul>
         </div>
       </div>
     </nav>
   </header>
 
-  <!-- Page Content -->
-  <!-- Banner Starts Here -->
-  <div class="heading-page header-text">
-    <section class="page-heading">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="text-content">
-              <h4>contact us</h4>
-              <h2>let’s stay in touch!</h2>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- Banner Ends Here -->
-
   <section class="contact-us">
     <div class="container">
       <div class="row">
-
         <div class="col-lg-12">
           <div class="down-contact">
             <div class="row">
@@ -92,7 +95,15 @@
                     <h2>Send us a message</h2>
                   </div>
                   <div class="content">
-                    <form id="contact" action="" method="post">
+                    
+                    <?php if ($success_message): ?>
+                        <div class="alert alert-success"><?= $success_message ?></div>
+                    <?php endif; ?>
+                    <?php if ($error_message): ?>
+                        <div class="alert alert-danger"><?= $error_message ?></div>
+                    <?php endif; ?>
+
+                    <form id="contact" action="contact.php" method="post">
                       <div class="row">
                         <div class="col-md-6 col-sm-12">
                           <fieldset>
@@ -101,23 +112,22 @@
                         </div>
                         <div class="col-md-6 col-sm-12">
                           <fieldset>
-                            <input name="email" type="text" id="email" placeholder="Your email" required="">
+                            <input name="email" type="email" id="email" placeholder="Your email" required="">
                           </fieldset>
                         </div>
                         <div class="col-md-12 col-sm-12">
                           <fieldset>
-                            <input name="subject" type="text" id="subject" placeholder="Subject">
+                            <input name="subject" type="text" id="subject" placeholder="Subject" required="">
                           </fieldset>
                         </div>
                         <div class="col-lg-12">
                           <fieldset>
-                            <textarea name="message" rows="6" id="message" placeholder="Your Message"
-                              required=""></textarea>
+                            <textarea name="message" rows="6" id="message" placeholder="Your Message" required=""></textarea>
                           </fieldset>
                         </div>
                         <div class="col-lg-12">
                           <fieldset>
-                            <button type="submit" id="form-submit" class="main-button">Send Message</button>
+                            <button type="submit" name="submit_message" id="form-submit" class="main-button">Send Message</button>
                           </fieldset>
                         </div>
                       </div>
@@ -132,20 +142,9 @@
                   </div>
                   <div class="content">
                     <ul>
-                      <li>
-                        <h5>090-484-8080</h5>
-                        <span>PHONE NUMBER</span>
-                      </li>
-                      <li>
-                        <h5>info@company.com</h5>
-                        <span>EMAIL ADDRESS</span>
-                      </li>
-                      <li>
-                        <h5>123 Aenean id posuere dui,
-                          <br>Praesent laoreet 10660
-                        </h5>
-                        <span>STREET ADDRESS</span>
-                      </li>
+                      <li><h5>090-484-8080</h5><span>PHONE NUMBER</span></li>
+                      <li><h5>info@company.com</h5><span>EMAIL ADDRESS</span></li>
+                      <li><h5>123 Aenean id posuere dui,<br>Praesent laoreet 10660</h5><span>STREET ADDRESS</span></li>
                     </ul>
                   </div>
                 </div>
@@ -153,42 +152,22 @@
             </div>
           </div>
         </div>
-
-        <div class="col-lg-12">
-          <div id="map">
-            <iframe
-              src="https://maps.google.com/maps?q=Av.+L%C3%BAcio+Costa,+Rio+de+Janeiro+-+RJ,+Brazil&t=&z=13&ie=UTF8&iwloc=&output=embed"
-              width="100%" height="450px" frameborder="0" style="border:0" allowfullscreen></iframe>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
-
 
   <footer>
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
-          <ul class="social-icons">
-            <li><a href="#">Facebook</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">Behance</a></li>
-            <li><a href="#">Linkedin</a></li>
-            <li><a href="#">Dribbble</a></li>
-          </ul>
-        </div>
-        <div class="col-lg-12">
           <div class="copyright-text">
-            <p>Copyright 2020 Stand Blog Co.
-
-              | Design: <a rel="nofollow" href="https://templatemo.com" target="_parent">TemplateMo</a></p>
+            <p>Copyright 2020 Stand Blog Co. | Design: <a rel="nofollow" href="https://templatemo.com" target="_parent">TemplateMo</a></p>
           </div>
         </div>
       </div>
     </div>
   </footer>
+
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/custom.js"></script>
@@ -196,18 +175,5 @@
   <script src="assets/js/slick.js"></script>
   <script src="assets/js/isotope.js"></script>
   <script src="assets/js/accordions.js"></script>
-
-  <script language="text/Javascript">
-    cleared[0] = cleared[1] = cleared[2] = 0;
-    function clearField(t) {
-      if (!cleared[t.id]) {
-        cleared[t.id] = 1;
-        t.value = '';
-        t.style.color = '#fff';
-      }
-    }
-  </script>
-
 </body>
-
 </html>
