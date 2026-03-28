@@ -1,0 +1,110 @@
+body {
+    background-color: #f4f4f4;
+    /* Slightly off-white to make the form pop */
+    color: #1a1a1a;
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Vertically centers the form */
+    min-height: 100vh;
+    /* Takes up full viewport height */
+    margin: 0;
+    padding: 20px;
+}
+
+.form-container {
+    background: #fff;
+    max-width: 400px;
+    /* narrowed down for login form */
+    width: 100%;
+    padding: 40px 30px;
+    border: 1px solid #eee;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+h2 {
+    color: #000;
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: -1px;
+    border-left: 5px solid #e10600;
+    /* F1 Red Accent */
+    padding-left: 15px;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+label {
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #eee;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: #e10600;
+    outline: none;
+    box-shadow: 0 0 8px rgba(225, 6, 0, 0.1);
+}
+
+button {
+    background-color: #e10600;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #b30500;
+}
+
+.back-link {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #777;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: #e10600;
+    text-decoration: underline;
+}
+
+.message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #ffe6e6;
+    /* light red background */
+    color: #e10600;
+    /* F1 red text */
+    border: 1px solid #ffcccc;
+}

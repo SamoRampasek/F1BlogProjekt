@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require_once("partials/header.php");
 
 if (isset($_GET['id'])) {
   $id = (int)$_GET['id'];
@@ -40,69 +40,6 @@ if (isset($_GET['id'])) {
   die("Neznáme ID článku.");
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap" rel="stylesheet">
-  <title>F1 Blog - Post Details</title>
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/fontawesome.css">
-  <link rel="stylesheet" href="assets/css/templatemo-stand-blog.css">
-  <link rel="stylesheet" href="assets/css/owl.css">
-</head>
-
-<body>
-  <div id="preloader">
-    <div class="jumper">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
-
-  <header class="background-header">
-    <nav class="navbar navbar-expand-lg">
-      <div class="container">
-        <a class="navbar-brand" href="index.php">
-          <h2>F1 Blog<em>.</em></h2>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-          aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.php">About Us</a></li>
-            <li class="nav-item"><a class="nav-link" href="blog.php">Blog Entries</a></li>
-            <li class="nav-item active"><a class="nav-link" href="post-details.php">Post Details <span class="sr-only">(current)</span></a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.php">Contact Us</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
-
-  <div class="heading-page header-text">
-    <section class="page-heading">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="text-content">
-              <h4>Post Details</h4>
-              <h2>Single blog post</h2>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
 
   <section class="blog-posts grid-system">
     <div class="container">
@@ -214,8 +151,19 @@ if (isset($_GET['id'])) {
                   </div>
                   <div class="content">
                     <ul>
-                      <li><a href="#"><h5>Example F1 Post 1</h5><span>May 31, 2020</span></a></li>
-                      <li><a href="#"><h5>Example F1 Post 2</h5><span>May 28, 2020</span></a></li>
+                      <?php
+                      // 3 posledne
+                      $stmt_recent = $pdo->query("SELECT id, title, created_at FROM posts ORDER BY created_at DESC LIMIT 3");
+
+                      while ($recent = $stmt_recent->fetch()):
+                        ?>
+                        <li>
+                          <a href="post-details.php?id=<?= $recent['id'] ?>">
+                            <h5><?= htmlspecialchars($recent['title']) ?></h5>
+                            <span><?= date('M d, Y', strtotime($recent['created_at'])) ?></span>
+                          </a>
+                        </li>
+                      <?php endwhile; ?>
                     </ul>
                   </div>
                 </div>
