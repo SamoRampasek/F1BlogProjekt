@@ -1,17 +1,25 @@
-<?php require 'db.php'; ?>
+<?php 
+require_once '../../app/models/Database.php';
+require_once '../../app/models/AdminCheck.php'; 
+
+$db = new Database(); 
+session_start();
+
+$auth = new AdminCheck();
+$auth->loginCheck();
+?>
 <!DOCTYPE html>
 <html lang="sk">
 <head>
     <meta charset="UTF-8">
     <title>Pridať nový článok</title>
-    <link rel="stylesheet" href="assets/css/add-post-style.css">
+    <link rel="stylesheet" href="../assets/css/add-post-style.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="form-container">
     <h2>Nový príspevok</h2>
-
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $title = $_POST['title'];
@@ -21,9 +29,9 @@
         $image_url = $_POST['image_url'];
 
         $sql = "INSERT INTO posts (title, category, content, author, image_url) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $pdo->prepare($sql);
+        $prikaz = $db->prepare($sql);
 
-        if ($stmt->execute([$title, $category, $content, $author, $image_url])) {
+        if ($prikaz->execute([$title, $category, $content, $author, $image_url])) {
             echo "<div class='message' style='color: #28a745; background: #e8f5e9;'>Článok bol úspešne pridaný!</div>";
         } else {
             echo "<div class='message' style='color: #e10600; background: #ffebee;'>Nastala chyba.</div>";
@@ -50,7 +58,7 @@
         <button type="submit">Publikovať článok</button>
     </form>
 
-    <a href="index.php" class="back-link">← Späť na hlavnú stránku</a>
+    <a href="admin.php" class="back-link">← Späť na hlavnú stránku</a>
 </div>
 
 </body>

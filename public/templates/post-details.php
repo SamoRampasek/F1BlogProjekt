@@ -1,27 +1,24 @@
 <?php
-require_once("partials/header.php");
+require_once("../partials/header.php");
 
 if (isset($_GET['id'])) {
   $id = (int)$_GET['id'];
-
   // najdenie postu
-  $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
-  $stmt->execute([$id]);
-  $post = $stmt->fetch();
+  $prikaz = $db->prepare("SELECT * FROM posts WHERE id = ?");
+  $prikaz->execute([$id]);
+  $post = $prikaz->fetch();
 
   if (!$post) {
     die("Článok nebol nájdený!");
   }
-
   // novy comment
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_comment'])) {
       $name = trim($_POST['name'] ?? '');
       $email = trim($_POST['email'] ?? '');
       $message = trim($_POST['message'] ?? '');
-
       // kontrola
       if (!empty($name) && !empty($email) && !empty($message)) {
-          $insertStmt = $pdo->prepare("INSERT INTO comments (name, email, message, post_id) VALUES (?, ?, ?, ?)");
+          $insertStmt = $db->prepare("INSERT INTO comments (name, email, message, post_id) VALUES (?, ?, ?, ?)");
           $insertStmt->execute([$name, $email, $message, $id]);
           
           // refresh
@@ -29,9 +26,8 @@ if (isset($_GET['id'])) {
           exit;
       }
   }
-
   // vytiahnutie commentov
-  $commentsStmt = $pdo->prepare("SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC");
+  $commentsStmt = $db->prepare("SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC");
   $commentsStmt->execute([$id]);
   $comments = $commentsStmt->fetchAll();
   $commentCount = count($comments);
@@ -80,7 +76,7 @@ if (isset($_GET['id'])) {
                         <?php foreach ($comments as $comment): ?>
                           <li>
                             <div class="author-thumb">
-                              <img src="assets/images/user.jpg" alt="User Avatar">
+                              <img src="../assets/images/user.jpg" alt="User Avatar">
                             </div>
                             <div class="right-content">
                               <h4><?= htmlspecialchars($comment['name']) ?><span><?= date('M d, Y', strtotime($comment['created_at'])) ?></span></h4>
@@ -153,9 +149,9 @@ if (isset($_GET['id'])) {
                     <ul>
                       <?php
                       // 3 posledne
-                      $stmt_recent = $pdo->query("SELECT id, title, created_at FROM posts ORDER BY created_at DESC LIMIT 3");
+                      $prikaz_recent = $db->query("SELECT id, title, created_at FROM posts ORDER BY created_at DESC LIMIT 3");
 
-                      while ($recent = $stmt_recent->fetch()):
+                      while ($recent = $prikaz_recent->fetch()):
                         ?>
                         <li>
                           <a href="post-details.php?id=<?= $recent['id'] ?>">

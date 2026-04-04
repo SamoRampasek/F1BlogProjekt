@@ -1,6 +1,7 @@
 <?php
 session_start();
-require 'db.php';
+require '../../app/models/Database.php';
+$db = new Database();
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
@@ -16,10 +17,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
         href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i&display=swap"
         rel="stylesheet">
     <title>F1 Blog</title>
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/fontawesome.css">
-    <link rel="stylesheet" href="assets/css/templatemo-stand-blog.css">
-    <link rel="stylesheet" href="assets/css/owl.css">
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/fontawesome.css">
+    <link rel="stylesheet" href="../assets/css/templatemo-stand-blog.css">
+    <link rel="stylesheet" href="../assets/css/owl.css">
 </head>
 
 <body>
@@ -34,7 +35,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <header class="background-header">
         <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" href="index.php">
+                <a class="navbar-brand" href="home.php">
                     <h2>F1 Blog<em>.</em></h2>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
@@ -42,9 +43,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item <?= ($current_page == 'index.php') ? 'active' : ''; ?>">
-                        <a class="nav-link" href="index.php">Home
-                            <?= ($current_page == 'index.php') ? '<span class="sr-only">(current)</span>' : ''; ?>
+                    <li class="nav-item <?= ($current_page == 'home.php') ? 'active' : ''; ?>">
+                        <a class="nav-link" href="home.php">Home
+                            <?= ($current_page == 'home.php') ? '<span class="sr-only">(current)</span>' : ''; ?>
                         </a>
                     </li>
 

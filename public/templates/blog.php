@@ -1,5 +1,5 @@
 <?php
-require_once("partials/header.php");
+require_once("../partials/header.php");
 
 $display_category = "";
 //filter na kategorie
@@ -7,13 +7,13 @@ if (isset($_GET['category']) && !empty($_GET['category'])) {
   $selected_category = $_GET['category'];
   $display_category = htmlspecialchars($selected_category);
 
-  $stmt = $pdo->prepare("SELECT * FROM posts WHERE category = :category ORDER BY created_at DESC");
-  $stmt->execute(['category' => $selected_category]);
+  $prikaz = $db->prepare("SELECT * FROM posts WHERE category = :category ORDER BY created_at DESC");
+  $prikaz->execute(['category' => $selected_category]);
 } else {
-  $stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC");
+  $prikaz = $db->query("SELECT * FROM posts ORDER BY created_at DESC");
 }
 
-$all_posts = $stmt->fetchAll();
+$all_posts = $prikaz->fetchAll();
 ?>
 
 
@@ -39,7 +39,7 @@ $all_posts = $stmt->fetchAll();
                   <div class="col-lg-6">
                     <div class="blog-post">
                       <div class="blog-thumb">
-                        <img src="<?= htmlspecialchars($post['image_url'] ?: 'assets/images/blog-thumb-01.jpg') ?>" alt="">
+                        <img src="<?= htmlspecialchars($post['image_url'] ?: '../assets/images/blog-thumb-01.jpg') ?>" alt="">
                       </div>
                       <div class="down-content">
                         <span><?= htmlspecialchars($post['category']) ?></span>
@@ -89,9 +89,9 @@ $all_posts = $stmt->fetchAll();
                     <ul>
                       <?php
                       // 3 posledne
-                      $stmt_recent = $pdo->query("SELECT id, title, created_at FROM posts ORDER BY created_at DESC LIMIT 3");
+                      $prikaz_recent = $db->query("SELECT id, title, created_at FROM posts ORDER BY created_at DESC LIMIT 3");
 
-                      while ($recent = $stmt_recent->fetch()):
+                      while ($recent = $prikaz_recent->fetch()):
                         ?>
                         <li>
                           <a href="post-details.php?id=<?= $recent['id'] ?>">
@@ -113,9 +113,9 @@ $all_posts = $stmt->fetchAll();
                     <ul>
                       <?php
                       // kategorie
-                      $stmt_cats = $pdo->query("SELECT category, COUNT(*) as post_count FROM posts GROUP BY category ORDER BY category ASC");
+                      $prikaz_cats = $db->query("SELECT category, COUNT(*) as post_count FROM posts GROUP BY category ORDER BY category ASC");
 
-                      while ($cat = $stmt_cats->fetch()):
+                      while ($cat = $prikaz_cats->fetch()):
                         ?>
                         <li>
                           <a href="blog.php?category=<?= urlencode($cat['category']) ?>">

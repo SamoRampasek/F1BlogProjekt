@@ -1,32 +1,18 @@
 <?php
-require_once("partials/header.php");
+require_once("../partials/header.php");
+require_once '../../app/models/Contact.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_message'])) {
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $subject = trim($_POST['subject'] ?? '');
-    $message = trim($_POST['message'] ?? '');
-
-    if (!empty($name) && !empty($email) && !empty($subject) && !empty($message)) {
-        try {
-            $stmt = $pdo->prepare("INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$name, $email, $subject, $message]);
-            
-            // session variable
-            $_SESSION['success_message'] = "Thank you! Your message has been sent.";
-            
-            // redirect (fix na refresh bug)
-            header("Location: contact.php");
-            exit; 
-        } catch (PDOException $e) {
-            $_SESSION['error_message'] = "Oops! Something went wrong.";
-            header("Location: contact.php");
-            exit;
-        }
+    $contact = new Contact($db, $_POST);
+    if ($contact->store()) {
+        $_SESSION['success_message'] = "Thank you! Your message has been sent.";
+    } else {
+        $_SESSION['error_message'] = $contact->getLastError();
     }
+    header("Location: contact.php");
+    exit;
 }
 
-// reset aby nezostavali vysvietene spravy
 $success_message = $_SESSION['success_message'] ?? '';
 $error_message = $_SESSION['error_message'] ?? '';
 unset($_SESSION['success_message'], $_SESSION['error_message']);

@@ -1,5 +1,5 @@
 <?php 
-require_once("partials/header.php");
+require_once("../partials/header.php");
 ?>
 
   <section class="about-us">
@@ -7,7 +7,7 @@ require_once("partials/header.php");
 
       <div class="row">
         <div class="col-lg-12">
-          <img src="assets/images/blog-post-01.jpg" alt="F1 Paddock">
+          <img src="../assets/images/blog-post-01.jpg" alt="F1 Paddock">
           <p>Welcome to <strong>F1 Blog</strong>, your premier destination for high-speed analysis and the latest news from the pinnacle of motorsport. Since our inception, we’ve been dedicated to bringing fans closer to the grid, from the tight corners of Monaco to the high-speed straights of Monza. Whether you are a casual viewer or a technical enthusiast obsessed with telemetry and aero-packages, we provide the insights you need.
           <br><br>
           We don't just report the results; we dive into the strategy. Why did the undercut fail? How did a specific tire compound change the race pace? Our goal is to dissect every Grand Prix weekend to explain the "how" and "why" behind the chequered flag. We follow the drama of the "Silly Season," the technical breakthroughs in the paddock, and the rising stars of the F1 Academy.</p>
