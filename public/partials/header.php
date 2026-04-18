@@ -4,8 +4,8 @@ require '../../app/models/Database.php';
 $db = new Database();
 $current_page = basename($_SERVER['PHP_SELF']);
 
-require_once("../../app/models/BlogOperations.php");
-$blogOperations = new BlogOperations($db);
+require_once("../../app/models/QueryOperations.php");
+$QueryOperations = new QueryOperations($db);
 ?>
 <!DOCTYPE html>
 <html lang="en">

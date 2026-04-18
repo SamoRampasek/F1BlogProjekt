@@ -9,7 +9,7 @@ require_once("../partials/header.php");
         <div class="all-blog-posts">
           <div class="row">
             <?php
-            $posts = $blogOperations->getPosts();
+            $posts = $QueryOperations->getPosts();
             foreach ($posts as $post):
               $commentCount = $post['comment_count'];
               ?>
@@ -64,7 +64,7 @@ require_once("../partials/header.php");
                   <ul>
                     <?php
                     // POSLEDNE 3
-                    $recentPosts = $blogOperations->getRecentPosts();
+                    $recentPosts = $QueryOperations->getRecentPosts();
                     foreach ($recentPosts as $recent):
                       ?>
                       <li>
@@ -87,7 +87,7 @@ require_once("../partials/header.php");
                   <ul>
                     <?php
                     // KATEGORIE
-                    $categories = $blogOperations->getCategories();
+                    $categories = $QueryOperations->getCategories();
                     foreach ($categories as $cat):
                       ?>
                       <li>

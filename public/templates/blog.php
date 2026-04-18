@@ -2,18 +2,15 @@
 require_once("../partials/header.php");
 
 $display_category = "";
+$selected_category = null;
+
 // CATEGORY FILTER
 if (isset($_GET['category']) && !empty($_GET['category'])) {
-  $selected_category = $_GET['category'];
-  $display_category = htmlspecialchars($selected_category);
-
-  $prikaz = $db->prepare("SELECT * FROM posts WHERE category = :category ORDER BY created_at DESC");
-  $prikaz->execute(['category' => $selected_category]);
-} else {
-  $prikaz = $db->query("SELECT * FROM posts ORDER BY created_at DESC");
+    $selected_category = $_GET['category'];
+    $display_category = htmlspecialchars($selected_category);
 }
 
-$all_posts = $prikaz->fetchAll();
+$all_posts = $QueryOperations->getAllPosts($selected_category);
 ?>
 
 
@@ -89,7 +86,7 @@ $all_posts = $prikaz->fetchAll();
                   <ul>
                     <?php
                     // POSLEDNE 3
-                    $recentPosts = $blogOperations->getRecentPosts();
+                    $recentPosts = $QueryOperations->getRecentPosts();
                     foreach ($recentPosts as $recent):
                       ?>
                       <li>
@@ -112,7 +109,7 @@ $all_posts = $prikaz->fetchAll();
                   <ul>
                     <?php
                     // KATEGORIE
-                    $categories = $blogOperations->getCategories();
+                    $categories = $QueryOperations->getCategories();
                     foreach ($categories as $cat):
                       ?>
                       <li>

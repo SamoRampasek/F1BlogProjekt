@@ -8,36 +8,11 @@ class BlogOperations
         $this->db = $db;
     }
 
-    public function getRecentPosts(): array
+    public function addPost(string $title, string $category, string $content, string $author, string $image_url): bool
     {
-        $query = "SELECT id, title, created_at FROM posts ORDER BY created_at DESC LIMIT 3";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
-    }
-
-    public function getCategories(): array
-    {
-        $query = "SELECT category, COUNT(*) as post_count FROM posts GROUP BY category ORDER BY category ASC";
-        $stmt = $this->db->query($query);
-
-        return $stmt->fetchAll();
-    }
-
-    public function getPosts(): array
-    {
-        $query = "SELECT posts.*, COUNT(comments.post_id) AS comment_count 
-              FROM posts 
-              LEFT JOIN comments ON posts.id = comments.post_id 
-              GROUP BY posts.id 
-              ORDER BY posts.created_at DESC 
-              LIMIT 4";
-
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
+        $sql = "INSERT INTO posts (title, category, content, author, image_url) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$title, $category, $content, $author, $image_url]);
     }
 
     public function deletePost(int $id): bool

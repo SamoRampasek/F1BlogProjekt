@@ -1,33 +1,34 @@
 <?php
 session_start();
 require_once '../../app/models/Database.php';
-require_once '../../app/models/AdminCheck.php'; 
+require_once '../../app/models/AdminCheck.php';
+require_once '../../app/models/BlogOperations.php';
+require_once '../../app/models/QueryOperations.php';
 
 $db = new Database();
 
 $auth = new AdminCheck();
 $auth->loginCheck();
 
-// mazanie postov
+$BlogOperations = new BlogOperations($db);
+$QueryOperations = new QueryOperations($db);
+
 if (isset($_GET['delete_id'])) {
-    $id_to_delete = $_GET['delete_id'];
-    // zmazanie commentov
-    $prikaz_comments = $db->prepare("DELETE FROM comments WHERE post_id = ?");
-    $prikaz_comments->execute([$id_to_delete]);
-    // zmazanie postu
-    $prikaz_post = $db->prepare("DELETE FROM posts WHERE id = ?");
-    $prikaz_post->execute([$id_to_delete]);
-    header("Location: admin.php");
-    exit;
+  $id = (int) $_GET['delete_id'];
+
+  $BlogOperations->deletePost($id);
+
+  header("Location: admin.php");
+  exit;
 }
 
-//mazanie sprav
 if (isset($_GET['delete_message_id'])) {
-    $id_to_delete = $_GET['delete_message_id'];
-    $prikaz_post = $db->prepare("DELETE FROM messages WHERE message_id = ?");
-    $prikaz_post->execute([$id_to_delete]);
-    header("Location: admin.php");
-    exit;
+  $id = (int) $_GET['delete_message_id'];
+
+  $BlogOperations->deleteMessage($id);
+
+  header("Location: admin.php");
+  exit;
 }
 ?>
 
@@ -107,10 +108,13 @@ if (isset($_GET['delete_message_id'])) {
       <div class="row">
         <div class="col-lg-12">
           <div class="admin-header-flex">
-            <h2 style="border-left: 5px solid #e10600; padding-left: 15px; text-transform: uppercase; font-weight: 900;">Manage Posts</h2>
+            <h2
+              style="border-left: 5px solid #e10600; padding-left: 15px; text-transform: uppercase; font-weight: 900;">
+              Manage Posts</h2>
             <div class="main-button">
               <a href="add-post.php"
-                style="background-color: #e10600; color: white; padding: 10px 20px; border-radius: 4px;">+ Create New Post</a>
+                style="background-color: #e10600; color: white; padding: 10px 20px; border-radius: 4px;">+ Create New
+                Post</a>
             </div>
           </div>
 
@@ -127,8 +131,9 @@ if (isset($_GET['delete_message_id'])) {
               </thead>
               <tbody>
                 <?php
-                $prikaz = $db->query("SELECT id, title, category, author, created_at FROM posts ORDER BY created_at DESC");
-                while ($post = $prikaz->fetch()):
+                // POSTY
+                $posts = $QueryOperations->getAllPosts();
+                foreach ($posts as $post):
                   ?>
                   <tr>
                     <td><?= date('M d, Y', strtotime($post['created_at'])) ?></td>
@@ -142,7 +147,7 @@ if (isset($_GET['delete_message_id'])) {
                         Delete</a>
                     </td>
                   </tr>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
               </tbody>
             </table>
           </div>
@@ -156,7 +161,9 @@ if (isset($_GET['delete_message_id'])) {
       <div class="row">
         <div class="col-lg-12">
           <div class="admin-header-flex">
-            <h2 style="border-left: 5px solid #e10600; padding-left: 15px; text-transform: uppercase; font-weight: 900;">User Messages</h2>
+            <h2
+              style="border-left: 5px solid #e10600; padding-left: 15px; text-transform: uppercase; font-weight: 900;">
+              User Messages</h2>
           </div>
 
           <div class="all-blog-posts">
@@ -172,21 +179,23 @@ if (isset($_GET['delete_message_id'])) {
               </thead>
               <tbody>
                 <?php
-                $prikaz = $db->query("SELECT message_id, subject, message, email, created_at FROM messages ORDER BY created_at DESC");
-                while ($post = $prikaz->fetch()):
+                // SPRAVY
+                $messages = $QueryOperations->getAllMessages();
+                foreach ($messages as $message):
                   ?>
                   <tr>
-                    <td><?=  htmlspecialchars($post['subject'])?></td>
-                    <td><strong><?= htmlspecialchars($post['message']) ?></strong></td>
-                    <td><?= htmlspecialchars($post['email']) ?></td>
-                    <td><?= date('M d, Y', strtotime($post['created_at'])) ?></td>
+                    <td><?= htmlspecialchars($message['subject']) ?></td>
+                    <td><strong><?= htmlspecialchars($message['message']) ?></strong></td>
+                    <td><?= htmlspecialchars($message['email']) ?></td>
+                    <td><?= date('M d, Y', strtotime($message['created_at'])) ?></td>
                     <td>
-                      <a href="admin.php?delete_message_id=<?= $post['message_id'] ?>" class="btn-delete"
-                        onclick="return confirm('Are you sure you want to delete this post?')"><i class="fa fa-trash"></i>
+                      <a href="admin.php?delete_message_id=<?= $message['message_id'] ?>" class="btn-delete"
+                        onclick="return confirm('Are you sure you want to delete this message?')"><i
+                          class="fa fa-trash"></i>
                         Delete</a>
                     </td>
                   </tr>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
               </tbody>
             </table>
           </div>
