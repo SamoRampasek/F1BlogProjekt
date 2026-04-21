@@ -2,44 +2,35 @@
 session_start();
 require '../../app/models/Database.php';
 require_once '../../app/models/AdminCheck.php'; 
+require_once '../../app/models/QueryOperations.php';
+require_once '../../app/core/Helper.php';
+
 $db = new Database();
 $auth = new AdminCheck();
+$queryOps = new QueryOperations($db);
+
 $auth->loginCheck();
-// id kontrola pre istotu
-if (!isset($_GET['id'])) {
-    header("Location: admin.php");
-    exit;
+
+$id = $_GET['id'] ?? null;
+if (!$id) {
+    Helper::redirect("admin.php");
 }
-$id = $_GET['id'];
+
+
 $message = '';
 
-// updatovanie postu
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = $_POST['title'];
-    $category = $_POST['category'];
-    $author = $_POST['author'];
-    $image_url = $_POST['image_url'];
-    $content = $_POST['content'];
-    // update v db
-    $prikaz = $db->prepare("UPDATE posts SET title = ?, category = ?, author = ?, image_url = ?, content = ? WHERE id = ?");
-    
-    if ($prikaz->execute([$title, $category, $author, $image_url, $content, $id])) {
-        // redirect
-        header("Location: admin.php");
-        exit;
+    if ($queryOps->updatePost((int)$id, $_POST)) {
+        Helper::redirect("admin.php");
     } else {
         $message = "Something went wrong updating the post.";
     }
 }
 
-// vytiahnutie dat pre form
-$prikaz = $db->prepare("SELECT * FROM posts WHERE id = ?");
-$prikaz->execute([$id]);
-$post = $prikaz->fetch();
-// error handlovanie
+$post = $queryOps->getPostById((int)$id);
+
 if (!$post) {
-    header("Location: admin.php");
-    exit;
+    Helper::redirect("admin.php");
 }
 ?>
 
@@ -61,7 +52,7 @@ if (!$post) {
             <div class="message"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
         
-        <form method="POST" action="edit-post.php?id=<?= $post['id'] ?>">
+        <form method="POST" action="edit-post.php?id=<?= htmlspecialchars($post['id']) ?>">
             
             <label for="title">Title</label>
             <input type="text" id="title" name="title" value="<?= htmlspecialchars($post['title']) ?>" required>

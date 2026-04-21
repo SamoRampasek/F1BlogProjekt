@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_message'])) {
     } else {
         $_SESSION['error_message'] = $contact->getLastError();
     }
-    header("Location: contact.php");
+    Helper::redirect("contact.php");
     exit;
 }
 

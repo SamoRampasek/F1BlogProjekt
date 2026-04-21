@@ -64,4 +64,74 @@ class QueryOperations
 
         return $stmt->fetchAll();
     }
+
+    public function getPostById(int $id)
+    {
+        $query = "SELECT * FROM posts WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$id]);
+        
+        return $stmt->fetch();
+    }
+
+    public function commentControl(int $postId, array $postData): bool
+    {
+        if (isset($postData['submit_comment'])) {
+            $name = trim($postData['name'] ?? '');
+            $email = trim($postData['email'] ?? '');
+            $message = trim($postData['message'] ?? '');
+            
+            if (!empty($name) && !empty($email) && !empty($message)) {
+                return $this->addComment($name, $email, $message, $postId);
+            }
+        }
+        
+        return false;
+    }
+
+    public function addComment(string $name, string $email, string $message, int $postId): bool
+    {
+        $query = "INSERT INTO comments (name, email, message, post_id) VALUES (?, ?, ?, ?)";
+        $stmt = $this->db->prepare($query);
+        
+        return $stmt->execute([$name, $email, $message, $postId]);
+    }
+
+    public function getComments(int $postId): array
+    {
+        $query = "SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$postId]);
+        
+        return $stmt->fetchAll();
+    }
+
+    public function updatePost(int $id, array $postData): bool
+    {
+        $query = "UPDATE posts SET title = ?, category = ?, author = ?, image_url = ?, content = ? WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        
+        return $stmt->execute([
+            $postData['title'] ?? '',
+            $postData['category'] ?? '',
+            $postData['author'] ?? '',
+            $postData['image_url'] ?? '',
+            $postData['content'] ?? '',
+            $id
+        ]);
+    }
+
+    public function addPost(array $postData): bool // TODO AK SA DA VYMENIT ZA BLOGOPS
+    {
+        $query = "INSERT INTO posts (title, category, content, author, image_url) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->db->prepare($query);
+        
+        return $stmt->execute([
+            $postData['title'] ?? '',
+            $postData['category'] ?? '',
+            $postData['content'] ?? '',
+            $postData['author'] ?? 'Admin',
+            $postData['image_url'] ?? ''
+        ]);
+    }
 }

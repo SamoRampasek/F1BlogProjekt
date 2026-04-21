@@ -4,6 +4,7 @@ require_once '../../app/models/Database.php';
 require_once '../../app/models/AdminCheck.php';
 require_once '../../app/models/BlogOperations.php';
 require_once '../../app/models/QueryOperations.php';
+require_once '../../app/core/Helper.php';
 
 $db = new Database();
 
@@ -18,7 +19,7 @@ if (isset($_GET['delete_id'])) {
 
   $BlogOperations->deletePost($id);
 
-  header("Location: admin.php");
+  Helper::redirect("admin.php");
   exit;
 }
 
@@ -27,7 +28,7 @@ if (isset($_GET['delete_message_id'])) {
 
   $BlogOperations->deleteMessage($id);
 
-  header("Location: admin.php");
+  Helper::redirect("admin.php");
   exit;
 }
 ?>
