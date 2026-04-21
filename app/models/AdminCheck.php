@@ -1,4 +1,5 @@
 <?php
+require_once '../../app/core/Helper.php';
 
 class AdminCheck
 {
@@ -12,7 +13,7 @@ class AdminCheck
     public function loginCheck()
     {
         if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-            header("Location: login.php");
+            Helper::redirect("login.php");
             exit;
         }
     }

@@ -1,6 +1,7 @@
 <?php
-require_once("../partials/header.php");
+require_once "../partials/header.php";
 require_once '../../app/models/Contact.php';
+require_once '../../app/core/Helper.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_message'])) {
     $contact = new Contact($db, $_POST);
@@ -91,24 +92,6 @@ unset($_SESSION['success_message'], $_SESSION['error_message']);
     </div>
   </section>
 
-  <footer>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="copyright-text">
-            <p>Copyright 2020 Stand Blog Co. | Design: <a rel="nofollow" href="https://templatemo.com" target="_parent">TemplateMo</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/custom.js"></script>
-  <script src="assets/js/owl.js"></script>
-  <script src="assets/js/slick.js"></script>
-  <script src="assets/js/isotope.js"></script>
-  <script src="assets/js/accordions.js"></script>
-</body>
-</html>
+<?php
+require_once("../partials/footer.php");
+?>

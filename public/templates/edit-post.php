@@ -1,13 +1,13 @@
 <?php
 session_start();
-require '../../app/models/Database.php';
+require_once '../../app/core/Database.php';
 require_once '../../app/models/AdminCheck.php'; 
 require_once '../../app/models/QueryOperations.php';
 require_once '../../app/core/Helper.php';
 
 $db = new Database();
 $auth = new AdminCheck();
-$queryOps = new QueryOperations($db);
+$QueryOperations = new QueryOperations($db);
 
 $auth->loginCheck();
 
@@ -16,18 +16,17 @@ if (!$id) {
     Helper::redirect("admin.php");
 }
 
-
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($queryOps->updatePost((int)$id, $_POST)) {
+    if ($QueryOperations->updatePost((int)$id, $_POST, $_SESSION['admin_username'])) {
         Helper::redirect("admin.php");
     } else {
         $message = "Something went wrong updating the post.";
     }
 }
 
-$post = $queryOps->getPostById((int)$id);
+$post = $QueryOperations->getPostById((int)$id);
 
 if (!$post) {
     Helper::redirect("admin.php");
@@ -60,14 +59,11 @@ if (!$post) {
             <label for="category">Category</label>
             <input type="text" id="category" name="category" value="<?= htmlspecialchars($post['category']) ?>" required>
 
-            <label for="author">Author</label>
-            <input type="text" id="author" name="author" value="<?= htmlspecialchars($post['author']) ?>" required>
-
             <label for="image_url">Image URL</label>
             <input type="text" id="image_url" name="image_url" value="<?= htmlspecialchars($post['image_url']) ?>" required>
 
             <label for="content">Content</label>
-            <textarea id="content" name="content" rows="10" required><?= htmlspecialchars($post['content']) ?></textarea>
+            <textarea id="content" name="content" rows="10" placeholder="Write your text here..." required><?= htmlspecialchars($post['content']) ?></textarea>
 
             <button type="submit">Update Post</button>
         </form>

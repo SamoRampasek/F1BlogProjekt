@@ -1,11 +1,12 @@
 <?php
 session_start();
-require '../../app/models/Database.php';
-$db = new Database();
-$current_page = basename($_SERVER['PHP_SELF']);
-
+require '../../app/core/Database.php';
 require_once("../../app/models/QueryOperations.php");
+
+$db = new Database();
 $QueryOperations = new QueryOperations($db);
+
+$current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -1,16 +1,15 @@
 <?php
 require_once("../partials/header.php");
 
+// CATEGORY FILTER
 $display_category = "";
 $selected_category = null;
-
-// CATEGORY FILTER
 if (isset($_GET['category']) && !empty($_GET['category'])) {
-    $selected_category = $_GET['category'];
-    $display_category = htmlspecialchars($selected_category);
+  $selected_category = $_GET['category'];
+  $display_category = htmlspecialchars($selected_category);
 }
 
-$all_posts = $QueryOperations->getAllPosts($selected_category);
+$posts = $QueryOperations->getAllPosts($selected_category);
 ?>
 
 
@@ -31,14 +30,17 @@ $all_posts = $QueryOperations->getAllPosts($selected_category);
               </div>
             <?php endif; ?>
 
-            <?php if (count($all_posts) > 0): ?>
-              <?php foreach ($all_posts as $post): ?>
-                <div class="col-lg-6">
-                  <div class="blog-post">
+            <?php if (count($posts) > 0): ?>
+              <?php foreach ($posts as $post): ?>
+                <div class="col-lg-6 d-flex align-items-stretch">
+
+                  <div class="blog-post w-100 d-flex flex-column">
+
                     <div class="blog-thumb">
                       <img src="<?= htmlspecialchars($post['image_url'] ?: '../assets/images/blog-thumb-01.jpg') ?>" alt="">
                     </div>
-                    <div class="down-content">
+
+                    <div class="down-content d-flex flex-column flex-grow-1">
                       <span><?= htmlspecialchars($post['category']) ?></span>
                       <a href="post-details.php?id=<?= $post['id'] ?>">
                         <h4><?= htmlspecialchars($post['title']) ?></h4>
@@ -47,8 +49,10 @@ $all_posts = $QueryOperations->getAllPosts($selected_category);
                         <li><a href="#"><?= htmlspecialchars($post['author']) ?></a></li>
                         <li><a href="#"><?= date('M d, Y', strtotime($post['created_at'])) ?></a></li>
                       </ul>
-                      <p><?= nl2br(htmlspecialchars(substr($post['content'], 0, 100))) ?>...</p>
+
+                      <p class="flex-grow-1"><?= nl2br(htmlspecialchars(substr($post['content'], 0, 100))) ?>...</p>
                     </div>
+
                   </div>
                 </div>
               <?php endforeach; ?>
@@ -109,13 +113,13 @@ $all_posts = $QueryOperations->getAllPosts($selected_category);
                   <ul>
                     <?php
                     // KATEGORIE
-                    $categories = $QueryOperations->getCategories();
-                    foreach ($categories as $cat):
+                    $categoryegories = $QueryOperations->getCategories();
+                    foreach ($categoryegories as $category):
                       ?>
                       <li>
-                        <a href="blog.php?category=<?= urlencode($cat['category']) ?>">
-                          - <?= htmlspecialchars($cat['category']) ?>
-                          (<?= $cat['post_count'] ?>)
+                        <a href="blog.php?category=<?= urlencode($category['category']) ?>">
+                          - <?= htmlspecialchars($category['category']) ?>
+                          (<?= $category['post_count'] ?>)
                         </a>
                       </li>
                     <?php endforeach; ?>
@@ -148,50 +152,6 @@ $all_posts = $QueryOperations->getAllPosts($selected_category);
   </div>
 </section>
 
-
-<footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <ul class="social-icons">
-          <li><a href="#">Facebook</a></li>
-          <li><a href="#">Twitter</a></li>
-          <li><a href="#">Behance</a></li>
-          <li><a href="#">Linkedin</a></li>
-          <li><a href="#">Dribbble</a></li>
-        </ul>
-      </div>
-      <div class="col-lg-12">
-        <div class="copyright-text">
-          <p>Copyright 2020 Stand Blog Co.
-
-            | Design: <a rel="nofollow" href="https://templatemo.com" target="_parent">TemplateMo</a></p>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-
-
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/custom.js"></script>
-<script src="assets/js/owl.js"></script>
-<script src="assets/js/slick.js"></script>
-<script src="assets/js/isotope.js"></script>
-<script src="assets/js/accordions.js"></script>
-
-<script language="text/Javascript">
-  cleared[0] = cleared[1] = cleared[2] = 0;
-  function clearField(t) {
-    if (!cleared[t.id]) {
-      cleared[t.id] = 1;
-      t.value = '';
-      t.style.color = '#fff';
-    }
-  }
-</script>
-
-</body>
-
-</html>
+<?php
+require_once("../partials/footer.php");
+?>

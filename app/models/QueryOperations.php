@@ -106,7 +106,7 @@ class QueryOperations
         return $stmt->fetchAll();
     }
 
-    public function updatePost(int $id, array $postData): bool
+    public function updatePost(int $id, array $postData, string $author): bool
     {
         $query = "UPDATE posts SET title = ?, category = ?, author = ?, image_url = ?, content = ? WHERE id = ?";
         $stmt = $this->db->prepare($query);
@@ -114,14 +114,14 @@ class QueryOperations
         return $stmt->execute([
             $postData['title'] ?? '',
             $postData['category'] ?? '',
-            $postData['author'] ?? '',
+            $author,
             $postData['image_url'] ?? '',
             $postData['content'] ?? '',
             $id
         ]);
     }
 
-    public function addPost(array $postData): bool // TODO AK SA DA VYMENIT ZA BLOGOPS
+    public function addPost(array $postData, string $author): bool
     {
         $query = "INSERT INTO posts (title, category, content, author, image_url) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
@@ -130,7 +130,7 @@ class QueryOperations
             $postData['title'] ?? '',
             $postData['category'] ?? '',
             $postData['content'] ?? '',
-            $postData['author'] ?? 'Admin',
+            $author,
             $postData['image_url'] ?? ''
         ]);
     }

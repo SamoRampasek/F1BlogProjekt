@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once '../../app/models/Database.php';
-require_once '../../app/models/Login.php';
+require_once '../../app/core/Database.php';
+require_once '../../app/core/Login.php';
 
 $db = new Database();
-$prihlasenie = new Login($db);
-$prihlasenie->checkSession();
-$error = $prihlasenie->processForm();
+$login = new Login($db);
+$login->checkSession();
+$error = $login->processForm();
 ?>
 
 <!DOCTYPE html>

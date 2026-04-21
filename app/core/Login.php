@@ -1,4 +1,5 @@
 <?php
+require_once '../../app/core/Helper.php';
 
 class Login
 {
@@ -9,16 +10,14 @@ class Login
         $this->db = $db;
     }
 
-    // handling ak je admin uz loginnuty
     public function checkSession()
     {
         if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
-            header("Location: admin.php");
+            Helper::redirect("admin.php");
             exit;
         }
     }
 
-    // login form
     public function processForm()
     {
         $error = '';
@@ -32,7 +31,7 @@ class Login
             if ($admin) {
                 $_SESSION['admin_logged_in'] = true;
                 $_SESSION['admin_username'] = $admin['username'];
-                header("Location: admin.php");
+                Helper::redirect("admin.php");
                 exit;
             } else {
                 $error = "Invalid username or password.";
@@ -45,12 +44,12 @@ class Login
     public function authenticate($username, $password)
     {
         try {
-            $prikaz = $this->db->prepare("SELECT admin_id, username, password_hash FROM admins WHERE username = :username");
-            $prikaz->execute(['username' => $username]);
-            $admin = $prikaz->fetch();
+            $query = $this->db->prepare("SELECT admin_id, username, password_hash FROM admins WHERE username = :username");
+            $query->execute(['username' => $username]);
+            $stmt = $query->fetch();
 
-            if ($admin && password_verify($password, $admin['password_hash'])) {
-                return $admin;
+            if ($stmt && password_verify($password, $stmt['password_hash'])) {
+                return $stmt;
             }
         } catch (PDOException $e) {
             return false;

@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once '../../app/models/Database.php';
+require_once '../../app/core/Database.php';
 require_once '../../app/models/AdminCheck.php';
 require_once '../../app/models/QueryOperations.php'; 
 
 $db = new Database();
 $auth = new AdminCheck();
-$queryOps = new QueryOperations($db);
+$QueryOperations = new QueryOperations($db);
 
 $auth->loginCheck();
 
@@ -14,7 +14,7 @@ $message = '';
 $messageType = '';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if ($queryOps->addPost($_POST)) {
+    if ($QueryOperations->addPost($_POST, $_SESSION['admin_username'])) {
         $message = "Článok bol úspešne pridaný!";
         $messageType = "success";
     } else {
@@ -24,12 +24,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Pridať nový článok - F1 Admin</title>
+    <title>Add a new Post - F1 Admin</title>
     <link rel="stylesheet" href="../assets/css/add-post-style.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap" rel="stylesheet">
 </head>
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
 
     <div class="form-container">
-        <h2>Nový príspevok</h2>
+        <h2>New Post</h2>
         
         <?php if ($message): ?>
             <?php 
@@ -50,25 +50,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endif; ?>
 
         <form action="add-post.php" method="POST">
-            <label for="title">Nadpis:</label>
+            <label for="title">Title</label>
             <input type="text" id="title" name="title" placeholder="Názov článku" required>
 
-            <label for="category">Kategória:</label>
+            <label for="category">Category</label>
             <input type="text" id="category" name="category" placeholder="napr. Race Recap" required>
 
-            <label for="author">Autor:</label>
-            <input type="text" id="author" name="author" value="Admin" required>
-
-            <label for="image_url">URL obrázka:</label>
+            <label for="image_url">Image URL</label>
             <input type="text" id="image_url" name="image_url" placeholder="https://media.formula1.com/image/..." required>
 
-            <label for="content">Obsah článku:</label>
-            <textarea id="content" name="content" rows="8" placeholder="Tu napíšte text..." required></textarea>
+            <label for="content">Content</label>
+            <textarea id="content" name="content" rows="10" placeholder="Write your text here..." required></textarea>
 
-            <button type="submit">Publikovať článok</button>
+            <button type="submit">Publish Post</button>
         </form>
 
-        <a href="admin.php" class="back-link">&larr; Späť na hlavnú stránku</a>
+        <a href="admin.php" class="back-link">&larr; Back to Dashboard</a>
     </div>
 
 </body>

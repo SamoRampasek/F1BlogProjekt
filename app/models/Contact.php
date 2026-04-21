@@ -20,7 +20,6 @@ class Contact
 
     public function store(): bool
     {
-        // validacia inputu
         if (empty($this->name) || empty($this->email) || empty($this->subject) || empty($this->message)) {
             $this->lastError = "Prosim, vyplň všetky polia!";
             return false;
@@ -30,12 +29,11 @@ class Contact
             return false;
         }
 
-        // db
         try {
-            $sql = "INSERT INTO messages (name, email, subject, message) 
+            $query = "INSERT INTO messages (name, email, subject, message) 
                     VALUES (:name, :email, :subject, :message)";
 
-            $stmt = $this->db->prepare($sql);
+            $stmt = $this->db->prepare($query);
 
             return $stmt->execute([
                 'name'    => $this->name,
@@ -48,7 +46,7 @@ class Contact
             return false;
         }
     }
-    // handling chyby
+
     public function getLastError(): string
     {
         return $this->lastError;

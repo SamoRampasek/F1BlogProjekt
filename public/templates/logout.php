@@ -1,6 +1,7 @@
 <?php
 session_start();
 session_destroy();
-header("Location: home.php");
+require_once '../../app/core/Helper.php';
+Helper::redirect("home.php");
 exit;
 ?>
