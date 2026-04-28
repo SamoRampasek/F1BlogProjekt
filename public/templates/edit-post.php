@@ -1,15 +1,5 @@
 <?php
-session_start();
-require_once '../../app/core/Database.php';
-require_once '../../app/models/AdminCheck.php'; 
-require_once '../../app/models/QueryOperations.php';
-require_once '../../app/core/Helper.php';
-
-$db = new Database();
-$auth = new AdminCheck();
-$QueryOperations = new QueryOperations($db);
-
-$auth->loginCheck();
+require_once '../partials/admin-dependencies.php';
 
 $id = $_GET['id'] ?? null;
 if (!$id) {

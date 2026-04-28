@@ -1,24 +1,15 @@
 <?php
-session_start();
-require_once '../../app/core/Database.php';
-require_once '../../app/models/AdminCheck.php';
-require_once '../../app/models/QueryOperations.php'; 
-
-$db = new Database();
-$auth = new AdminCheck();
-$QueryOperations = new QueryOperations($db);
-
-$auth->loginCheck();
+require_once '../partials/admin-dependencies.php';
 
 $message = '';
 $messageType = '';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($QueryOperations->addPost($_POST, $_SESSION['admin_username'])) {
-        $message = "Článok bol úspešne pridaný!";
+        $message = "Post added sucessfully";
         $messageType = "success";
     } else {
-        $message = "Nastala chyba pri pridávaní článku.";
+        $message = "Unexpected Error";
         $messageType = "error";
     }
 }

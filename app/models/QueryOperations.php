@@ -65,7 +65,7 @@ class QueryOperations
         return $stmt->fetchAll();
     }
 
-    public function getPostById(int $id)
+    public function getPostById(int $id): array
     {
         $query = "SELECT * FROM posts WHERE id = ?";
         $stmt = $this->db->prepare($query);

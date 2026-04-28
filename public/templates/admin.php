@@ -1,17 +1,5 @@
 <?php
-session_start();
-require_once '../../app/core/Database.php';
-require_once '../../app/models/AdminCheck.php';
-require_once '../../app/models/BlogOperations.php';
-require_once '../../app/models/QueryOperations.php';
-require_once '../../app/core/Helper.php';
-
-$auth = new AdminCheck();
-$auth->loginCheck();
-
-$db = new Database();
-$BlogOperations = new BlogOperations($db);
-$QueryOperations = new QueryOperations($db);
+require_once '../partials/admin-dependencies.php';
 
 if (isset($_GET['delete_id'])) {
   $id = (int) $_GET['delete_id'];

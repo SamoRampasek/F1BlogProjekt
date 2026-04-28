@@ -42,7 +42,7 @@ if (isset($_GET['id'])) {
                     <li><a href="#"><?= date('M d, Y', strtotime($post['created_at'] ?? 'now')) ?></a></li>
                     <li><a href="#"><?= $commentCount ?> Comments</a></li>
                   </ul>
-                  <p><?= nl2br(htmlspecialchars($post['content'] ?? '')) ?></p>
+                  <p><?= htmlspecialchars($post['content'] ?? '') ?></p>
                 </div>
               </div>
             </div>
@@ -64,7 +64,7 @@ if (isset($_GET['id'])) {
                             <h4>
                               <?= htmlspecialchars($comment['name']) ?><span><?= date('M d, Y', strtotime($comment['created_at'])) ?></span>
                             </h4>
-                            <p><?= nl2br(htmlspecialchars($comment['message'])) ?></p>
+                            <p><?= htmlspecialchars($comment['message']) ?></p>
                           </div>
                         </li>
                       <?php endforeach; ?>

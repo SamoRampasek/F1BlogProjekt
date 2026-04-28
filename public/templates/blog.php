@@ -50,7 +50,7 @@ $posts = $QueryOperations->getAllPosts($selected_category);
                         <li><a href="#"><?= date('M d, Y', strtotime($post['created_at'])) ?></a></li>
                       </ul>
 
-                      <p class="flex-grow-1"><?= nl2br(htmlspecialchars(substr($post['content'], 0, 100))) ?>...</p>
+                      <p class="flex-grow-1"><?= htmlspecialchars(substr($post['content'], 0, 100)) ?>...</p>
                     </div>
 
                   </div>

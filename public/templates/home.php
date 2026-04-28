@@ -1,5 +1,6 @@
 <?php
 require_once("../partials/header.php");
+//echo password_hash("123", PASSWORD_DEFAULT);
 
 $posts = $QueryOperations->getPosts();
 ?>
@@ -32,7 +33,7 @@ $posts = $QueryOperations->getPosts();
                       <li><a href="#"><?= date('M d, Y', strtotime($post['created_at'])) ?></a></li>
                       <li><a href="#"><?= $commentCount ?> Comments</a></li>
                     </ul>
-                    <p><?= nl2br(htmlspecialchars(substr($post['content'], 0, 200))) ?>...</p>
+                    <p><?= htmlspecialchars(substr($post['content'], 0, 200)) ?>...</p>
                   </div>
                 </div>
               </div>
