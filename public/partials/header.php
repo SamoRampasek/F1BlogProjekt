@@ -1,10 +1,11 @@
 <?php
 session_start();
-require '../../app/core/Database.php';
-require_once("../../app/models/QueryOperations.php");
+require_once '../../app/core/Database.php';
+require_once("../../app/models/SQLOperations.php");
+require_once '../../app/core/Helper.php';
 
 $db = new Database();
-$QueryOperations = new QueryOperations($db);
+$SQLOperations = new SQLOperations($db);
 
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>

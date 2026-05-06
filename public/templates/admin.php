@@ -4,7 +4,7 @@ require_once '../partials/admin-dependencies.php';
 if (isset($_GET['delete_id'])) {
   $id = (int) $_GET['delete_id'];
 
-  $BlogOperations->deletePost($id);
+  $SQLOperations->deletePost($id);
 
   Helper::redirect("admin.php");
   exit;
@@ -13,7 +13,7 @@ if (isset($_GET['delete_id'])) {
 if (isset($_GET['delete_message_id'])) {
   $id = (int) $_GET['delete_message_id'];
 
-  $BlogOperations->deleteMessage($id);
+  $SQLOperations->deleteMessage($id);
 
   Helper::redirect("admin.php");
   exit;
@@ -120,7 +120,7 @@ if (isset($_GET['delete_message_id'])) {
               <tbody>
                 <?php
                 // POSTY
-                $posts = $QueryOperations->getAllPosts();
+                $posts = $SQLOperations->getAllPosts();
                 foreach ($posts as $post):
                   ?>
                   <tr>
@@ -168,7 +168,7 @@ if (isset($_GET['delete_message_id'])) {
               <tbody>
                 <?php
                 // SPRAVY
-                $messages = $QueryOperations->getAllMessages();
+                $messages = $SQLOperations->getAllMessages();
                 foreach ($messages as $message):
                   ?>
                   <tr>

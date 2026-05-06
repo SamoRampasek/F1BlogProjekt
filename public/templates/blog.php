@@ -9,7 +9,7 @@ if (isset($_GET['category']) && !empty($_GET['category'])) {
   $display_category = htmlspecialchars($selected_category);
 }
 
-$posts = $QueryOperations->getAllPosts($selected_category);
+$posts = $SQLOperations->getAllPosts($selected_category);
 ?>
 
 
@@ -90,7 +90,7 @@ $posts = $QueryOperations->getAllPosts($selected_category);
                   <ul>
                     <?php
                     // POSLEDNE 3
-                    $recentPosts = $QueryOperations->getRecentPosts();
+                    $recentPosts = $SQLOperations->getRecentPosts();
                     foreach ($recentPosts as $recent):
                       ?>
                       <li>
@@ -113,8 +113,8 @@ $posts = $QueryOperations->getAllPosts($selected_category);
                   <ul>
                     <?php
                     // KATEGORIE
-                    $categoryegories = $QueryOperations->getCategories();
-                    foreach ($categoryegories as $category):
+                    $categories = $SQLOperations->getCategories();
+                    foreach ($categories as $category):
                       ?>
                       <li>
                         <a href="blog.php?category=<?= urlencode($category['category']) ?>">

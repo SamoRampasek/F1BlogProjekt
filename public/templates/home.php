@@ -2,7 +2,7 @@
 require_once("../partials/header.php");
 //echo password_hash("123", PASSWORD_DEFAULT);
 
-$posts = $QueryOperations->getPosts();
+$posts = $SQLOperations->getPosts();
 ?>
 
 <section class="blog-posts">
@@ -66,7 +66,7 @@ $posts = $QueryOperations->getPosts();
                   <ul>
                     <?php
                     // POSLEDNE 3
-                    $recentPosts = $QueryOperations->getRecentPosts();
+                    $recentPosts = $SQLOperations->getRecentPosts();
                     foreach ($recentPosts as $recent):
                       ?>
                       <li>
@@ -89,8 +89,8 @@ $posts = $QueryOperations->getPosts();
                   <ul>
                     <?php
                     // KATEGORIE
-                    $categoryegories = $QueryOperations->getCategories();
-                    foreach ($categoryegories as $category):
+                    $categories = $SQLOperations->getCategories();
+                    foreach ($categories as $category):
                       ?>
                       <li>
                         <a href="blog.php?category=<?= urlencode($category['category']) ?>">

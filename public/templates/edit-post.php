@@ -9,14 +9,14 @@ if (!$id) {
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($QueryOperations->updatePost((int)$id, $_POST, $_SESSION['admin_username'])) {
+    if ($SQLOperations->updatePost((int)$id, $_POST, $_SESSION['admin_username'])) {
         Helper::redirect("admin.php");
     } else {
         $message = "Something went wrong updating the post.";
     }
 }
 
-$post = $QueryOperations->getPostById((int)$id);
+$post = $SQLOperations->getPostById((int)$id);
 
 if (!$post) {
     Helper::redirect("admin.php");

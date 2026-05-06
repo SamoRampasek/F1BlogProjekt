@@ -3,10 +3,10 @@ require_once("../partials/header.php");
 
 if (isset($_GET['id'])) {
   $id = (int) $_GET['id'];
-  $post = $QueryOperations->getPostById($id);
+  $post = $SQLOperations->getPostById($id);
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $wasAdded = $QueryOperations->commentControl($id, $_POST);
+    $wasAdded = $SQLOperations->commentControl($id, $_POST);
 
     if ($wasAdded) {
       header("Location: post-details.php?id=" . $id);
@@ -14,7 +14,7 @@ if (isset($_GET['id'])) {
     }
   }
 
-  $comments = $QueryOperations->getComments($id);
+  $comments = $SQLOperations->getComments($id);
   $commentCount = count($comments);
 }
 ?>
@@ -136,7 +136,7 @@ if (isset($_GET['id'])) {
                 <div class="content">
                   <ul>
                     <?php
-                      $recentPosts = $QueryOperations->getRecentPosts();
+                      $recentPosts = $SQLOperations->getRecentPosts();
                       foreach ($recentPosts as $recent):
                     ?>
                       <li>

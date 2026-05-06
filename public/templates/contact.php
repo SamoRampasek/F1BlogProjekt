@@ -1,7 +1,6 @@
 <?php
 require_once "../partials/header.php";
 require_once '../../app/models/Contact.php';
-require_once '../../app/core/Helper.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_message'])) {
     $contact = new Contact($db, $_POST);

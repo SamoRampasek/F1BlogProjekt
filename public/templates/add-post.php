@@ -5,7 +5,7 @@ $message = '';
 $messageType = '';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if ($QueryOperations->addPost($_POST, $_SESSION['admin_username'])) {
+    if ($SQLOperations->addPost($_POST, $_SESSION['admin_username'])) {
         $message = "Post added sucessfully";
         $messageType = "success";
     } else {
